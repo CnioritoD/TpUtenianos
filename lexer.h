@@ -16,7 +16,7 @@ typedef enum {
     TOKEN_OR,
     TOKEN_NOT,
 
-    /* Identificadores clasificados segun la consigna. */
+    /* Identificadores propios del lenguaje. */
     TOKEN_ID_SENSOR_NUM,
     TOKEN_ID_SENSOR_BOOL,
     TOKEN_ID_DISPOSITIVO,

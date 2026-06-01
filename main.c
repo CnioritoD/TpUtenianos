@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 #include "lexer.h"
 
 /* Recorre una linea completa y muestra cada token encontrado. */
@@ -21,7 +20,7 @@ static int analizar_linea(const char *linea, int numero_linea) {
                nombre_token(token.tipo),
                token.valor);
 
-        /* Para la entrega del lexer mostramos errores lexicos con numero de linea. */
+        /* Los errores lexicos se informan junto con la linea donde aparecen. */
         if (token.tipo == TOKEN_ERROR) {
             printf("          [ERROR LEXICO] Simbolo o cadena no reconocida: %s\n", token.valor);
             errores++;
@@ -31,8 +30,8 @@ static int analizar_linea(const char *linea, int numero_linea) {
     return errores;
 }
 
-/* Modo opcional: analiza un archivo pasado por argumento. */
-static int analizar_archivo(const char *ruta) {
+/* Escanea un archivo de texto linea por linea. */
+static int escanear_archivo(const char *ruta) {
     FILE *archivo = fopen(ruta, "r");
     char linea[512];
     int numero_linea = 1;
@@ -56,11 +55,11 @@ int main(int argc, char *argv[]) {
     char entrada[512];
     int errores = 0;
 
-    printf("--- Lexer SMART-HOME: reconocimiento de tokens ---\n");
+    printf("--- Scanner SMART-HOME: reconocimiento de tokens ---\n");
 
-    /* Sin argumentos funciona interactivo; con argumento analiza ese archivo. */
+    /* Sin argumentos lee una linea por consola; con argumento lee un archivo. */
     if (argc > 1) {
-        errores = analizar_archivo(argv[1]);
+        errores = escanear_archivo(argv[1]);
     } else {
         printf("Modo interactivo. Escribi codigo SMART-HOME y presiona Enter.\n");
         printf("> ");
@@ -71,9 +70,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (errores == 0) {
-        printf("\nAnalisis lexico finalizado sin errores.\n");
+        printf("\nEscaneo lexico finalizado sin errores.\n");
     } else {
-        printf("\nAnalisis lexico finalizado con %d error(es).\n", errores);
+        printf("\nEscaneo lexico finalizado con %d error(es).\n", errores);
     }
 
     return errores == 0 ? 0 : 1;
