@@ -181,7 +181,7 @@ static int es_comilla_curva_cierre(const char *p) {
 Token obtener_siguiente_token(const char **cadena) {
     const char *inicio;
 
-    /* 1. Ignorar espacios. */
+    /* Ignora espacios antes de buscar el siguiente token. */
     while (isspace((unsigned char)**cadena)) {
         (*cadena)++;
     }
@@ -190,7 +190,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return crear_token_fijo(TOKEN_EOF, "EOF");
     }
 
-    /* 2. Ignorar comentarios // hasta fin de linea. */
+    /* Los comentarios comienzan con // y se descartan hasta el fin de linea. */
     if ((*cadena)[0] == '/' && (*cadena)[1] == '/') {
         while (!es_fin_linea(**cadena)) {
             (*cadena)++;
@@ -200,7 +200,7 @@ Token obtener_siguiente_token(const char **cadena) {
 
     inicio = *cadena;
 
-    /* 3. Textos entre comillas. */
+    /* Reconoce textos escritos entre comillas dobles. */
     if (**cadena == '"') {
         (*cadena)++;
         while (!es_fin_linea(**cadena) && **cadena != '"') {
@@ -230,7 +230,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return crear_token(TOKEN_ERROR, inicio, (int)(*cadena - inicio));
     }
 
-    /* 4. Operadores de dos caracteres. */
+    /* Los operadores compuestos se leen antes que los operadores simples. */
     if ((*cadena)[0] == '=' && (*cadena)[1] == '=') {
         *cadena += 2;
         return crear_token_fijo(TOKEN_IGUALDAD, "==");
@@ -248,7 +248,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return crear_token_fijo(TOKEN_MENOR_IGUAL, "<=");
     }
 
-    /* 5. Operadores y simbolos de un caracter. */
+    /* Operadores y simbolos de un solo caracter. */
     if (**cadena == '=') { (*cadena)++; return crear_token_fijo(TOKEN_IGUAL, "="); }
     if (**cadena == '>') { (*cadena)++; return crear_token_fijo(TOKEN_MAYOR, ">"); }
     if (**cadena == '<') { (*cadena)++; return crear_token_fijo(TOKEN_MENOR, "<"); }
@@ -256,7 +256,7 @@ Token obtener_siguiente_token(const char **cadena) {
     if (**cadena == '(') { (*cadena)++; return crear_token_fijo(TOKEN_PARENTESIS_ABRE, "("); }
     if (**cadena == ')') { (*cadena)++; return crear_token_fijo(TOKEN_PARENTESIS_CIERRA, ")"); }
 
-    /* 6. Hora HH:MM. */
+    /* Reconoce horas con formato HH:MM. */
     if (isdigit((unsigned char)(*cadena)[0]) &&
         isdigit((unsigned char)(*cadena)[1]) &&
         (*cadena)[2] == ':' &&
@@ -266,7 +266,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return crear_token(TOKEN_HORA, inicio, 5);
     }
 
-    /* 7. Fecha DD/MM/AAAA. */
+    /* Reconoce fechas con formato DD/MM/AAAA. */
     if (isdigit((unsigned char)(*cadena)[0]) &&
         isdigit((unsigned char)(*cadena)[1]) &&
         (*cadena)[2] == '/' &&
@@ -281,7 +281,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return crear_token(TOKEN_FECHA, inicio, 10);
     }
 
-    /* 8. Numeros y numeros con unidad: %, lux, C, s, m, h. */
+    /* Reconoce numeros solos o acompanados por unidades del lenguaje. */
     if (isdigit((unsigned char)**cadena) ||
         (**cadena == '-' && isdigit((unsigned char)(*cadena)[1]))) {
 
@@ -340,7 +340,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return crear_token(TOKEN_NUMERO, inicio, (int)(*cadena - inicio));
     }
 
-    /* 9. Palabras, identificadores y emails. */
+    /* Reconoce palabras, identificadores y correos electronicos. */
     if (isalpha((unsigned char)**cadena) || **cadena == '_') {
         const char *aux = *cadena;
         int tiene_arroba = 0;
@@ -372,7 +372,7 @@ Token obtener_siguiente_token(const char **cadena) {
         return palabra;
     }
 
-    /* 10. Si no coincide con nada, es error lexico. */
+    /* Si el caracter no coincide con ninguna regla, se informa error lexico. */
     (*cadena)++;
     return crear_token(TOKEN_ERROR, inicio, 1);
 }
