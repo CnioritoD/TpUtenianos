@@ -1,30 +1,66 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-// Enumeración para los tipos de componentes léxicos (Tokens) de TU gramática
 typedef enum {
     TOKEN_EOF,
-    TOKEN_WHEN, 
-    TOKEN_EVERY, 
-    TOKEN_DO, 
-    TOKEN_END, 
-    TOKEN_IF, 
-    TOKEN_THEN, 
+
+    /* Palabras reservadas del lenguaje SMART-HOME. */
+    TOKEN_WHEN,
+    TOKEN_EVERY,
+    TOKEN_IF,
+    TOKEN_THEN,
     TOKEN_ELSE,
-    TOKEN_ID,          // Para nombres como "sensor", "temp", "aire"
-    TOKEN_NUMERO,      // Para valores numéricos como 25
-    TOKEN_PUNTO,       // Para el símbolo .
-    TOKEN_IGUAL,       // Para el símbolo =
+    TOKEN_DO,
+    TOKEN_END,
+    TOKEN_AND,
+    TOKEN_OR,
+    TOKEN_NOT,
+
+    /* Identificadores clasificados segun la consigna. */
+    TOKEN_ID_SENSOR_NUM,
+    TOKEN_ID_SENSOR_BOOL,
+    TOKEN_ID_DISPOSITIVO,
+    TOKEN_ATRIBUTO,
+    TOKEN_ID,
+
+    /* Literales y valores con formato propio. */
+    TOKEN_BOOL,
+    TOKEN_MODO,
+    TOKEN_COLOR,
+    TOKEN_TEXTO,
+    TOKEN_EMAIL,
+    TOKEN_HORA,
+    TOKEN_FECHA,
+    TOKEN_NUM_TEMP,
+    TOKEN_PERCENT,
+    TOKEN_TIME,
+    TOKEN_LUX,
+    TOKEN_NUMERO,
+
+    /* Operadores y delimitadores. */
+    TOKEN_IGUAL,
+    TOKEN_IGUALDAD,
+    TOKEN_DIFERENTE,
+    TOKEN_MAYOR,
+    TOKEN_MENOR,
+    TOKEN_MAYOR_IGUAL,
+    TOKEN_MENOR_IGUAL,
+    TOKEN_PUNTO,
+    TOKEN_PARENTESIS_ABRE,
+    TOKEN_PARENTESIS_CIERRA,
+
     TOKEN_ERROR
 } TipoToken;
 
-// Estructura que representa a cada Token detectado
 typedef struct {
-    TipoToken tipo;
-    char valor[32]; // Arreglo para almacenar el texto del token
+    TipoToken tipo;   /* Categoria reconocida por el lexer. */
+    char valor[128];  /* Texto original encontrado en la entrada. */
 } Token;
 
-// Declaración de la función del lexer respetando la original
+/* Devuelve el proximo token y avanza el puntero de lectura. */
 Token obtener_siguiente_token(const char **cadena);
 
-#endif // LEXER_H
+/* Convierte el enum del token a texto para mostrarlo en pantalla. */
+const char *nombre_token(TipoToken tipo);
+
+#endif
