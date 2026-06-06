@@ -3,18 +3,20 @@
 #include <string.h>
 #include "lexer.h"
 
-#define MAX_VALOR 127
+#define MAX_VALOR 127// Limite de caracteres para el valor del token, dejando espacio para el null terminator
+
 
 /* Crea un token copiando el texto leido desde la entrada. */
 static Token crear_token(TipoToken tipo, const char *inicio, int largo) {
-    Token t;
+    Token t;//nuevo token
 
+    //largo es tamaño
     if (largo > MAX_VALOR) {
         largo = MAX_VALOR;
     }
 
-    t.tipo = tipo;
-    memcpy(t.valor, inicio, largo);
+    t.tipo = tipo;//machea el tipo del token
+    memcpy(t.valor, inicio, largo);//copia el texto del token al campo valor (destino, origen, tamaño)
     t.valor[largo] = '\0';
 
     return t;
