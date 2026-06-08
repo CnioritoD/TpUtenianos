@@ -1,6 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+// Enumeración para los tipos de componentes léxicos (Tokens)
 typedef enum {
     TOKEN_EOF,
 
@@ -52,15 +53,18 @@ typedef enum {
     TOKEN_ERROR
 } TipoToken;
 
+
+// Estructura que representa a cada Token detectado
 typedef struct {
-    TipoToken tipo;   /* Categoria reconocida por el lexer. */
-    char valor[128];  /* Texto original encontrado en la entrada. */
+    TipoToken tipo;   //tipo almacenado en el token
+    char valor[128]; // Arreglo para almacenar el texto del token  
 } Token;
 
-/* Devuelve el proximo token y avanza el puntero de lectura. */
+
+//Devuelve el proximo token y avanza el puntero de lectura.
 Token obtener_siguiente_token(const char **cadena);
 
-/* Convierte el enum del token a texto para mostrarlo en pantalla. */
+//Convierte el TipoToken a texto para mostrarlo en pantalla.
 const char *nombre_token(TipoToken tipo);
 
 #endif
