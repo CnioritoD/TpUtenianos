@@ -13,7 +13,7 @@ gcc -Wall -Wextra -std=c11 main.c lexer.c -o programa.exe
 Desde CMD, usando el entorno de MSYS2:
 
 ```cmd
-C:\msys64\usr\bin\bash.exe -lc "export PATH=/ucrt64/bin:/usr/bin:$PATH; cd "ruta de la carpeta .exe" && gcc -Wall -Wextra -std=c11 main.c lexer.c -o programa.exe"
+C:\msys64\usr\bin\bash.exe -lc "export PATH=/ucrt64/bin:/usr/bin:$PATH; cd (ruta de la carpeta .exe) && gcc -Wall -Wextra -std=c11 main.c lexer.c -o programa.exe"
 ```
 
 ## Ejecucion interactiva
@@ -46,7 +46,7 @@ WHEN sensor_temp > 20C THEN foco_living.estado = ON
 Abrir CMD y entrar a la carpeta del proyecto:
 
 ```cmd
-cd "ruta de la carpeta .exe"
+cd (ruta de la carpeta .exe)
 ```
 
 Ejecutar en modo interactivo:
