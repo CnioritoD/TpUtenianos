@@ -38,7 +38,7 @@ WHEN sensor_temp > 20C THEN foco_living.estado = ON
 Abrir CMD y entrar a la carpeta del proyecto:
 
 ```cmd
-cd C:\Users\yoque\Desktop\tp_sintaxis_ari-main
+cd "ruta de la carpeta del .exe"
 ```
 
 Ejecutar en modo interactivo:
