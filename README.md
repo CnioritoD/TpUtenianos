@@ -1,22 +1,26 @@
-# Formato esperado con Flex
+# Lexer SMART-HOME en formato Flex
 
-Esta carpeta contiene el lexer del lenguaje SMART-HOME en formato `.l`.
+Esta rama contiene directamente los archivos del lexer del lenguaje SMART-HOME en formato Flex.
+
+El archivo principal es:
+
+```txt
+smart_home.l
+```
 
 ## Generar el C desde Flex
 
-Desde la terminal UCRT64 de MSYS2, parado en esta carpeta:
+Desde la terminal UCRT64 de MSYS2, parado en la raiz de esta rama:
 
 ```bash
 flex smart_home.l
 gcc -Wall -Wextra -std=c11 lex.yy.c -o smart_home.exe
 ```
 
-Tambien se puede ejecutar desde la carpeta principal:
+El comando `flex smart_home.l` genera automaticamente:
 
-```bash
-cd formatoEsperado
-flex smart_home.l
-gcc -Wall -Wextra -std=c11 lex.yy.c -o smart_home.exe
+```txt
+lex.yy.c
 ```
 
 ## Ejecutar
@@ -24,7 +28,7 @@ gcc -Wall -Wextra -std=c11 lex.yy.c -o smart_home.exe
 Con archivo:
 
 ```bash
-./smart_home.exe ../entrada.txt
+./smart_home.exe ejemplo_consigna.smart
 ```
 
 O ingresando texto por teclado:
@@ -35,4 +39,4 @@ O ingresando texto por teclado:
 
 ## Nota
 
-Este `.l` no reemplaza tu lexer manual. Es una version alternativa para entregar en el formato usado por Flex.
+Esta rama deja solo los archivos del formato esperado para la entrega con Flex. El lexer manual en C queda fuera de esta rama para que la entrega muestre claramente el archivo `.l`.
