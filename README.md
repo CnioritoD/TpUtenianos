@@ -1,20 +1,35 @@
-# Lexer SMART-HOME en formato Flex
+# Lexer SMART-HOME con Flex
 
-Esta rama contiene directamente los archivos del lexer del lenguaje SMART-HOME en formato Flex.
+Lexer del lenguaje SMART-HOME escrito en formato Flex.
 
-El archivo principal es:
+Archivo principal:
 
 ```txt
 smart_home.l
 ```
 
-## Generar el C desde Flex
+## Requisitos
 
-Desde la terminal UCRT64 de MSYS2, parado en la raiz de esta rama:
+Tener instalado MSYS2 con los paquetes de Flex y GCC para UCRT64.
+
+Si falta alguno, abrir la terminal UCRT64 de MSYS2 e instalar:
 
 ```bash
-flex smart_home.l
-gcc -Wall -Wextra -std=c11 lex.yy.c -o smart_home.exe
+pacman -S mingw-w64-ucrt-x86_64-flex mingw-w64-ucrt-x86_64-gcc
+```
+
+## Compilar desde CMD
+
+Abrir CMD y entrar a la carpeta del proyecto:
+
+```cmd
+cd C:\Users\yoque\Desktop\tp_sintaxis_ari-main
+```
+
+Generar `lex.yy.c` con Flex y compilar el ejecutable:
+
+```cmd
+C:\msys64\usr\bin\bash.exe -lc "export PATH=/ucrt64/bin:/usr/bin:$PATH; cd /c/Users/yoque/Desktop/tp_sintaxis_ari-main && flex smart_home.l && gcc -Wall -Wextra -std=c11 lex.yy.c -o smart_home.exe"
 ```
 
 El comando `flex smart_home.l` genera automaticamente:
@@ -23,20 +38,32 @@ El comando `flex smart_home.l` genera automaticamente:
 lex.yy.c
 ```
 
-## Ejecutar
+## Compilar si Flex y GCC ya estan en el PATH
 
-Con archivo:
+Desde CMD, parado en la carpeta del proyecto:
 
-```bash
-./smart_home.exe ejemplo_consigna.smart
+```cmd
+flex smart_home.l
+gcc -Wall -Wextra -std=c11 lex.yy.c -o smart_home.exe
 ```
 
-O ingresando texto por teclado:
+## Ejecutar desde CMD
 
-```bash
-./smart_home.exe
+Leer un archivo de entrada:
+
+```cmd
+smart_home.exe ejemplo_consigna.smart
 ```
 
-## Nota
+Ejecutar en modo interactivo:
 
-Esta rama deja solo los archivos del formato esperado para la entrega con Flex. El lexer manual en C queda fuera de esta rama para que la entrega muestre claramente el archivo `.l`.
+```cmd
+smart_home.exe
+```
+
+Para probar con otros archivos:
+
+```cmd
+smart_home.exe entrada.txt
+smart_home.exe entrada2.txt
+```
