@@ -103,11 +103,6 @@ static int analizar_interactivo(void) {
     return errores;
 }
 
-static void mostrar_uso(const char *programa) {
-    printf("Uso:\n");
-    printf("  %s                 Ejecuta el modo interactivo\n", programa);
-    printf("  %s archivo.txt     Analiza el archivo indicado\n", programa);
-}
 
 int main(int argc, char *argv[]) {
     int errores = 0;
@@ -118,9 +113,6 @@ int main(int argc, char *argv[]) {
         errores = analizar_interactivo();
     } else if (argc == 2) {
         errores = analizar_archivo(argv[1]);
-    } else {
-        mostrar_uso(argv[0]);
-        return 1;
     }
 
     if (errores == 0) {
