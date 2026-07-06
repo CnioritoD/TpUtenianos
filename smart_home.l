@@ -1,5 +1,5 @@
-/* Lexer SMART-HOME en formato Flex (.l).
-   Genera un analizador lexico equivalente al lexer manual del proyecto. */
+/* Lexer SMART-HOME simple.
+   Reconoce los tokens usados por los ejemplos de ejemplosValidosSmart. */
 
 %option noyywrap
 %option yylineno
@@ -9,104 +9,121 @@
 
 %{
 #include <stdio.h>
-#include <stdlib.h>
+#include "smart_home.tab.h"
 
-static int errores = 0;
+static int errores_lexicos = 0;
 
 static void imprimir_token(const char *tipo, const char *valor) {
     printf("Linea %-3d | %-24s | %s\n", yylineno, tipo, valor);
 }
 
-static void imprimir_error(const char *valor) {
-    imprimir_token("TOKEN_ERROR", valor);
-    printf("          [ERROR LEXICO] Simbolo o cadena no reconocida: %s\n", valor);
-    errores++;
+int obtener_errores_lexicos(void) {
+    return errores_lexicos;
 }
+
+#ifdef LEXER_STANDALONE
+#define TOKEN(tipo, nombre) do { imprimir_token((nombre), yytext); return (tipo); } while (0)
+#else
+#define TOKEN(tipo, nombre) return (tipo)
+#endif
 %}
 
-DIGITO          [0-9]
-LETRA           [A-Za-z_]
-ID              {LETRA}[A-Za-z0-9_-]*
-NUMERO          -?{DIGITO}+(\.{DIGITO}+)?
-EMAIL           [A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
-TEXTO           \"[^\"\r\n]*\"
-HORA            {DIGITO}{DIGITO}:{DIGITO}{DIGITO}
-FECHA           {DIGITO}{DIGITO}\/{DIGITO}{DIGITO}\/{DIGITO}{DIGITO}{DIGITO}{DIGITO}
-TEMP            {NUMERO}(\302\260)?[cC]
-PORCENTAJE      {NUMERO}%
-TIEMPO          {NUMERO}[smhSMH]
-LUX             {NUMERO}[lL][uU][xX]
+DIGITO      [0-9]
+LETRA       [A-Za-z_]
+ID          {LETRA}[A-Za-z0-9_-]*
+NUMERO      -?{DIGITO}+(\.{DIGITO}+)?
+EMAIL       [A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+TEXTO       \"[^\"\r\n]*\"|\342\200\234[^\r\n]*\342\200\235
+HORA        {DIGITO}{DIGITO}:{DIGITO}{DIGITO}
+FECHA       {DIGITO}{DIGITO}\/{DIGITO}{DIGITO}\/{DIGITO}{DIGITO}{DIGITO}{DIGITO}
+TEMP        {NUMERO}(\302\260)?[cC]
+PORCENTAJE  {NUMERO}%
+TIEMPO      {NUMERO}[smhSMH]
+LUX         {NUMERO}[lL][uU][xX]
 
 %%
 
-[ \t\r\n]+              ;
-"//".*                  ;
+[ \t\r\n]+      ;
+"//".*          ;
 
-"WHEN"                  { imprimir_token("TOKEN_WHEN", yytext); }
-"EVERY"                 { imprimir_token("TOKEN_EVERY", yytext); }
-"IF"                    { imprimir_token("TOKEN_IF", yytext); }
-"THEN"                  { imprimir_token("TOKEN_THEN", yytext); }
-"ELSE"                  { imprimir_token("TOKEN_ELSE", yytext); }
-"DO"                    { imprimir_token("TOKEN_DO", yytext); }
-"END"                   { imprimir_token("TOKEN_END", yytext); }
-"AND"                   { imprimir_token("TOKEN_AND", yytext); }
-"OR"                    { imprimir_token("TOKEN_OR", yytext); }
-"NOT"                   { imprimir_token("TOKEN_NOT", yytext); }
+"WHEN"          { TOKEN(TOKEN_WHEN, "TOKEN_WHEN"); }
+"EVERY"         { TOKEN(TOKEN_EVERY, "TOKEN_EVERY"); }
+"IF"            { TOKEN(TOKEN_IF, "TOKEN_IF"); }
+"THEN"          { TOKEN(TOKEN_THEN, "TOKEN_THEN"); }
+"ELSE"          { TOKEN(TOKEN_ELSE, "TOKEN_ELSE"); }
+"DO"            { TOKEN(TOKEN_DO, "TOKEN_DO"); }
+"END"           { TOKEN(TOKEN_END, "TOKEN_END"); }
+"AND"           { TOKEN(TOKEN_AND, "TOKEN_AND"); }
+"OR"            { TOKEN(TOKEN_OR, "TOKEN_OR"); }
+"NOT"           { TOKEN(TOKEN_NOT, "TOKEN_NOT"); }
 
 "TRUE"|"FALSE"|"ON"|"OFF" {
-                            imprimir_token("TOKEN_BOOL", yytext);
-                        }
+                    TOKEN(TOKEN_BOOL, "TOKEN_BOOL");
+                }
 
-"FRIO"|"CALOR"|"VENT"   { imprimir_token("TOKEN_MODO", yytext); }
+"FRIO"|"CALOR"|"VENT" {
+                    TOKEN(TOKEN_MODO, "TOKEN_MODO");
+                }
+
 "BLANCO"|"ROJO"|"AZUL"|"WHITE"|"RED"|"BLUE" {
-                            imprimir_token("TOKEN_COLOR", yytext);
-                        }
+                    TOKEN(TOKEN_COLOR, "TOKEN_COLOR");
+                }
 
 "SENSOR_TEMP"|"SENSOR_TEMP_INT"|"SENSOR_HUMEDAD"|"SENSOR_LUZ" {
-                            imprimir_token("TOKEN_ID_SENSOR_NUM", yytext);
-                        }
+                    TOKEN(TOKEN_ID_SENSOR_NUM, "TOKEN_ID_SENSOR_NUM");
+                }
 
 "SENSOR_MOVIMIENTO"|"SENSOR_HUMO" {
-                            imprimir_token("TOKEN_ID_SENSOR_BOOL", yytext);
-                        }
+                    TOKEN(TOKEN_ID_SENSOR_BOOL, "TOKEN_ID_SENSOR_BOOL");
+                }
 
 ("FOCO_"|"AIRE_"|"PERSIANA_"|"CERRADURA_"|"RELOJ_"|"ALTAVOZ_"|"ALARMA_")[A-Za-z0-9_-]+ {
-                            imprimir_token("TOKEN_ID_DISPOSITIVO", yytext);
-                        }
-"RELOJ"|"ALARMA"        { imprimir_token("TOKEN_ID_DISPOSITIVO", yytext); }
+                    TOKEN(TOKEN_ID_DISPOSITIVO, "TOKEN_ID_DISPOSITIVO");
+                }
+
+"RELOJ"|"ALARMA" {
+                    TOKEN(TOKEN_ID_DISPOSITIVO, "TOKEN_ID_DISPOSITIVO");
+                }
 
 "ESTADO"|"BRILLO"|"COLOR"|"MODO"|"TEMP_OBJ"|"TEMP_OBJETIVO"|"TEMP_ACT"|"TEMP_ACTUAL"|"POSICION"|"HORA"|"FECHA"|"VOLUMEN"|"MUTE"|"MENSAJE"|"EMAIL"|"EMAIL_NOTIF"|"ACTIVADA" {
-                            imprimir_token("TOKEN_ATRIBUTO", yytext);
-                        }
+                    TOKEN(TOKEN_ATRIBUTO, "TOKEN_ATRIBUTO");
+                }
 
-{EMAIL}                 { imprimir_token("TOKEN_EMAIL", yytext); }
-{TEXTO}                 { imprimir_token("TOKEN_TEXTO", yytext); }
-{HORA}                  { imprimir_token("TOKEN_HORA", yytext); }
-{FECHA}                 { imprimir_token("TOKEN_FECHA", yytext); }
-{TEMP}                  { imprimir_token("TOKEN_NUM_TEMP", yytext); }
-{PORCENTAJE}            { imprimir_token("TOKEN_PERCENT", yytext); }
-{TIEMPO}                { imprimir_token("TOKEN_TIME", yytext); }
-{LUX}                   { imprimir_token("TOKEN_LUX", yytext); }
-{NUMERO}                { imprimir_token("TOKEN_NUMERO", yytext); }
+{EMAIL}         { TOKEN(TOKEN_EMAIL, "TOKEN_EMAIL"); }
+{TEXTO}         { TOKEN(TOKEN_TEXTO, "TOKEN_TEXTO"); }
+{HORA}          { TOKEN(TOKEN_HORA, "TOKEN_HORA"); }
+{FECHA}         { TOKEN(TOKEN_FECHA, "TOKEN_FECHA"); }
+{TEMP}          { TOKEN(TOKEN_NUM_TEMP, "TOKEN_NUM_TEMP"); }
+{PORCENTAJE}    { TOKEN(TOKEN_PERCENT, "TOKEN_PERCENT"); }
+{TIEMPO}        { TOKEN(TOKEN_TIME, "TOKEN_TIME"); }
+{LUX}           { TOKEN(TOKEN_LUX, "TOKEN_LUX"); }
+{NUMERO}        { TOKEN(TOKEN_NUMERO, "TOKEN_NUMERO"); }
 
-"=="                    { imprimir_token("TOKEN_IGUALDAD", yytext); }
-"!="                    { imprimir_token("TOKEN_DIFERENTE", yytext); }
-">="                    { imprimir_token("TOKEN_MAYOR_IGUAL", yytext); }
-"<="                    { imprimir_token("TOKEN_MENOR_IGUAL", yytext); }
-"="                     { imprimir_token("TOKEN_IGUAL", yytext); }
-">"                     { imprimir_token("TOKEN_MAYOR", yytext); }
-"<"                     { imprimir_token("TOKEN_MENOR", yytext); }
-"."                     { imprimir_token("TOKEN_PUNTO", yytext); }
-"("                     { imprimir_token("TOKEN_PARENTESIS_ABRE", yytext); }
-")"                     { imprimir_token("TOKEN_PARENTESIS_CIERRA", yytext); }
+"=="            { TOKEN(TOKEN_IGUALDAD, "TOKEN_IGUALDAD"); }
+"!="            { TOKEN(TOKEN_DIFERENTE, "TOKEN_DIFERENTE"); }
+">="            { TOKEN(TOKEN_MAYOR_IGUAL, "TOKEN_MAYOR_IGUAL"); }
+"<="            { TOKEN(TOKEN_MENOR_IGUAL, "TOKEN_MENOR_IGUAL"); }
+"="             { TOKEN(TOKEN_IGUAL, "TOKEN_IGUAL"); }
+">"             { TOKEN(TOKEN_MAYOR, "TOKEN_MAYOR"); }
+"<"             { TOKEN(TOKEN_MENOR, "TOKEN_MENOR"); }
+"."             { TOKEN(TOKEN_PUNTO, "TOKEN_PUNTO"); }
+"("             { TOKEN(TOKEN_PARENTESIS_ABRE, "TOKEN_PARENTESIS_ABRE"); }
+")"             { TOKEN(TOKEN_PARENTESIS_CIERRA, "TOKEN_PARENTESIS_CIERRA"); }
 
-{ID}                    { imprimir_token("TOKEN_ID", yytext); }
-.                       { imprimir_error(yytext); }
+{ID}            { TOKEN(TOKEN_ID, "TOKEN_ID"); }
+
+.               {
+                    imprimir_token("TOKEN_ERROR", yytext);
+                    printf("          [ERROR LEXICO] Simbolo no reconocido: %s\n", yytext);
+                    errores_lexicos++;
+                    return TOKEN_ERROR;
+                }
 
 %%
 
+#ifdef LEXER_STANDALONE
 int main(int argc, char *argv[]) {
-    printf("--- Lexer SMART-HOME: reconocimiento de tokens ---\n");
+    printf("--- Lexer SMART-HOME simple ---\n");
 
     if (argc == 2) {
         yyin = fopen(argv[1], "r");
@@ -119,17 +136,19 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    yylex();
+    while (yylex() != 0) {
+    }
 
     if (yyin != NULL && yyin != stdin) {
         fclose(yyin);
     }
 
-    if (errores == 0) {
+    if (errores_lexicos == 0) {
         printf("\nAnalisis lexico finalizado sin errores.\n");
     } else {
-        printf("\nAnalisis lexico finalizado con %d error(es).\n", errores);
+        printf("\nAnalisis lexico finalizado con %d error(es).\n", errores_lexicos);
     }
 
-    return errores == 0 ? 0 : 1;
+    return errores_lexicos == 0 ? 0 : 1;
 }
+#endif

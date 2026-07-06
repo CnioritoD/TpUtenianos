@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar programa",
+            "type": "shell",
+            "command": "C:\\msys64\\usr\\bin\\bash.exe",
+            "args": [
+                "-lc",
+                "export PATH=/ucrt64/bin:/usr/bin:$PATH; cd /c/Users/yoque/Desktop/tp_sintaxis_ari-main && gcc -Wall -Wextra -std=c11 main.c lexer.c -o programa.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Ejecutar programa",
+            "type": "shell",
+            "command": "${workspaceFolder}\\programa.exe",
+            "dependsOn": "Compilar programa",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,110 @@
+Gramática, documentación técnica 
+De acuerdo con las especificaciones del lenguaje SMART HOME, el analizador léxico 
+(Lexer) identificará los siguientes componentes mediante expresiones regulares y enviará 
+los tokens correspondientes al analizador sintáctico: 
+Palabras Reservadas: Términos fijos que definen las estructuras de control. No distinguen 
+entre mayúsculas y minúsculas. 
+WHEN, EVERY, IF, THEN, ELSE, DO, END 
+AND, OR, NOT 
+Operadores y Puntuación: 
+IGUALDAD (==), DIFERENTE (!=), MAYOR (>), MENOR (<), MAYOR_IGUAL (>=), 
+MENOR_IGUAL (<=) 
+IGUAL (=) para asignación 
+PUNTO (.) para acceso a atributos 
+PARENTESIS_ABRE ( ( ), PARENTESIS_CIERRA ( ) ) 
+5 
+Universidad Tecnológica Nacional- Facultad Regional Resistencia 
+Identificadores (Dispositivos y Atributos): 
+TK_ID_SENSOR_NUM: Sensores numéricos (ej. sensor_temp, sensor_humedad, 
+sensor_luz) 
+TK_ID_SENSOR_BOOL: Sensores lógicos (ej. sensor_movimiento, sensor_humo) 
+TK_ID_DISPOSITIVO: Actuadores con sus respectivos prefijos (foco_, aire_, 
+persiana_, cerradura_, reloj_, altavoz_, alarma_) 
+TK_ATRIBUTO: Propiedades de los dispositivos (.estado, .brillo, .color, .modo, .temp_obj, 
+.temp_act, .posicion, .hora, .fecha, .volumen, .mute, .mensaje, .email_notif, .activada) 
+Literales y Unidades (Tokens Compuestos): 
+TK_BOOL: Valores booleanos (TRUE, FALSE, ON, OFF) 
+TK_MODO: Estados discretos (FRIO, CALOR, VENT) 
+TK_COLOR: Nombres de colores (blanco, rojo, azul) 
+TK_NUM_TEMP: Número con unidad °C 
+TK_PERCENT: Número con unidad % 
+TK_TIME: Valores de tiempo terminados en s, m o h 
+TK_LUX: Número con unidad lux 
+TK_HORA: Formato horario HH:MM 
+TK_FECHA: Formato DD/MM/AAAA 
+TK_TEXTO: Cadena de caracteres entre comillas 
+TK_EMAIL: Cadena validada con estructura de correo electrónico 
+6 
+ 
+Universidad Tecnológica Nacional- Facultad Regional Resistencia 
+Σ → PROGRAMA 
+ 
+PROGRAMA → INSTRUCCION PROGRAMA 
+           | INSTRUCCION 
+ 
+INSTRUCCION → BLOQUE_WHEN 
+            | BLOQUE_EVERY 
+            | CONDICIONAL 
+            | ASIGNACION 
+ 
+BLOQUE_WHEN → WHEN CONDICION DO LISTA_ACCIONES END 
+ 
+BLOQUE_EVERY → EVERY TK_TIME DO LISTA_ACCIONES END 
+ 
+CONDICIONAL → IF CONDICION THEN LISTA_ACCIONES END 
+              | IF CONDICION THEN LISTA_ACCIONES ELSE LISTA_ACCIONES END 
+ 
+LISTA_ACCIONES → ACCION LISTA_ACCIONES 
+                  | ACCION 
+ 
+ACCION → ASIGNACION 
+ | CONDICIONAL 
+ 
+ASIGNACION → TK_ID_DISPOSITIVO PUNTO TK_ATRIBUTO IGUAL VALOR 
+ 
+CONDICION → EXP_LOGICA 
+ 
+EXP_LOGICA → TERMINO_LOGICO OR EXP_LOGICA 
+          | TERMINO_LOGICO 
+ 
+TERMINO_LOGICO → FACTOR_LOGICO AND TERMINO_LOGICO 
+                       | FACTOR_LOGICO 
+ 
+FACTOR_LOGICO → NOT FACTOR_LOGICO 
+      | PARENTESIS_ABRE EXP_LOGICA PARENTESIS_CIERRA 
+      | COMPARACION 
+      | TK_BOOL 
+      | TK_ID_SENSOR_BOOL 
+ 
+COMPARACION → EXP_EVALUADA OP_COMP EXP_EVALUADA 
+7 
+ 
+Universidad Tecnológica Nacional- Facultad Regional Resistencia 
+ 
+EXP_EVALUADA → TK_ID_SENSOR_NUM 
+               | TK_ID_SENSOR_BOOL 
+               | TK_ID_DISPOSITIVO PUNTO TK_ATRIBUTO 
+               | VALOR 
+ 
+OP_COMP → IGUALDAD 
+      | DIFERENTE 
+      | MAYOR 
+      | MENOR 
+      | MAYOR_IGUAL 
+      | MENOR_IGUAL 
+ 
+VALOR → VALOR_NUMERICO 
+| TK_BOOL 
+| TK_TEXTO 
+| TK_HORA 
+| TK_FECHA 
+| TK_EMAIL 
+| TK_COLOR 
+| TK_MODO 
+| TK_TIME 
+ 
+VALOR_NUMERICO → TK_NUM_TEMP 
+         | TK_PERCENT 
+         | TK_LUX 
+ 
+END 

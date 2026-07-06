@@ -1,0 +1,6 @@
+{
+    "code-runner.runInTerminal": true,
+    "code-runner.executorMap": {
+        "c": "C:\\msys64\\usr\\bin\\bash.exe -lc \"export PATH=/ucrt64/bin:/usr/bin:$PATH; cd /c/Users/yoque/Desktop/tp_sintaxis_ari-main && gcc -Wall -Wextra -std=c11 main.c lexer.c -o programa.exe && ./programa.exe\""
+    }
+}

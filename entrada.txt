@@ -1,0 +1,4 @@
+IF sensor_humo == ON THEN alarma.activada = TRUE
+WHEN sensor_temp > 20C THEN foco_living.estado = ON
+EVERY 10m DO aire_dormitorio.modo = FRIO
+IF sensor_luz < 300lux THEN persiana_living.posicion = 80%
