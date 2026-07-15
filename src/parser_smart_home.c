@@ -496,18 +496,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  41
+#define YYFINAL  42
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   126
+#define YYLAST   144
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  41
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  21
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  56
+#define YYNRULES  57
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  83
+#define YYNSTATES  87
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   295
@@ -561,11 +561,11 @@ static const yytype_int8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    56,    56,    60,    61,    65,    66,    67,    68,    72,
-      76,    80,    84,    85,    89,    90,    94,    95,    99,   109,
-     117,   118,   126,   127,   135,   136,   140,   141,   145,   146,
-     147,   148,   155,   163,   173,   177,   181,   185,   193,   194,
-     195,   196,   197,   198,   202,   203,   204,   205,   206,   207,
-     208,   209,   210,   211,   212,   213,   214
+      76,    77,    84,    88,    89,    93,    94,    98,    99,   103,
+     113,   121,   122,   130,   131,   139,   140,   144,   145,   149,
+     150,   151,   152,   159,   167,   177,   181,   185,   189,   197,
+     198,   199,   200,   201,   202,   206,   207,   208,   209,   210,
+     211,   212,   213,   214,   215,   216,   217,   218
 };
 #endif
 
@@ -604,12 +604,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-56)
+#define YYPACT_NINF (-42)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-33)
+#define YYTABLE_NINF (-34)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -618,15 +618,15 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      19,    44,   -10,    44,   -56,   -56,    27,    19,   -56,   -56,
-     -56,   -56,   -56,    14,    -4,    44,    -3,   -56,   -56,   -56,
-       5,    26,   -56,   -56,   -56,   -56,   -56,   -56,   -56,   -56,
-     -56,    44,   -56,    10,    64,   -56,   -56,    85,   -56,    67,
-      40,   -56,   -56,    80,    34,   -56,    -7,    23,    44,    44,
-     -56,   -56,   -56,   -56,   -56,   -56,    63,    23,    23,   -56,
-     -56,   -56,   -56,   -56,   -56,   -56,   -56,    20,   -56,   -56,
-      64,   -56,   -56,   -56,   105,   106,   -56,   -56,   -56,    23,
-      87,    23,   -56
+      20,    45,   -20,    45,   -42,   -42,    10,    20,   -42,   -42,
+     -42,   -42,   -42,   -24,    14,    45,    -2,   -42,   -42,   -42,
+       5,    16,   -42,   -42,   -42,   -42,   -42,   -42,   -42,   -42,
+     -42,    45,   -42,    39,    25,   -42,   -42,   109,   -42,    47,
+      56,    15,   -42,   -42,    81,    26,   -42,    -8,    34,    45,
+      45,   -42,   -42,   -42,   -42,   -42,   -42,    64,    34,    34,
+      34,   -42,   -42,   -42,   -42,   -42,   -42,   -42,   -42,    23,
+     -42,   -42,    25,   -42,   -42,   -42,   108,   116,   117,   -42,
+     -42,   -42,   -42,    34,    66,    34,   -42
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -634,30 +634,30 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,    20,    21,     0,     2,     3,     5,
-       6,     7,     8,     0,     0,     0,    44,    45,    46,    34,
-      35,    56,    47,    48,    49,    50,    51,    52,    53,    54,
-      55,     0,    36,     0,    25,    27,    30,     0,    37,     0,
-       0,     1,     4,     0,     0,    28,     0,     0,     0,     0,
-      38,    39,    40,    41,    42,    43,     0,     0,     0,    44,
-      56,    18,    22,    23,    19,    29,    17,     0,    14,    16,
-      24,    26,    35,    33,     0,    12,     9,    15,    10,     0,
-       0,    13,    11
+       0,     0,     0,     0,    21,    22,     0,     2,     3,     5,
+       6,     7,     8,     0,     0,     0,    45,    46,    47,    35,
+      36,    57,    48,    49,    50,    51,    52,    53,    54,    55,
+      56,     0,    37,     0,    26,    28,    31,     0,    38,     0,
+       0,     0,     1,     4,     0,     0,    29,     0,     0,     0,
+       0,    39,    40,    41,    42,    43,    44,     0,     0,     0,
+       0,    45,    57,    19,    23,    24,    20,    30,    18,     0,
+      15,    17,    25,    27,    36,    34,     0,     0,    13,     9,
+      16,    10,    11,     0,     0,    14,    12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -56,   -56,   -56,    90,   -56,   -56,    42,   -56,   -48,   -55,
-      45,    -1,   -56,   -56,     3,    50,   -14,   -56,    43,   -56,
-      69
+     -42,   -42,   -42,    69,   -42,   -42,    22,   -42,   -41,    42,
+      27,    -1,   -42,   -42,     2,    48,   -14,   -42,    41,   -42,
+      55
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     6,     7,     8,     9,    10,    66,    80,    67,    68,
-      69,    13,    14,    64,    33,    34,    35,    36,    37,    56,
+       0,     6,     7,     8,     9,    10,    68,    84,    69,    70,
+      71,    13,    14,    66,    33,    34,    35,    36,    37,    57,
       38
 };
 
@@ -666,36 +666,40 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      32,    45,    32,   -31,    48,   -31,    40,   -31,   -31,    74,
-      75,   -32,    77,   -32,    32,   -32,   -32,    39,    47,    77,
-      77,    48,     1,     2,     3,     3,    77,    41,     3,    76,
-      32,    81,    65,    44,    46,    71,   -31,     4,     4,     5,
-       5,     4,    11,     5,   -32,    12,    58,    32,    32,    11,
-      43,    48,    12,    62,    63,    32,    15,    16,    17,    18,
-      19,    20,     4,   -21,    21,    22,    23,    24,    25,    26,
-      27,    28,    29,    30,    49,    57,    59,    17,    18,    19,
-      72,     4,    31,    21,    22,    23,    24,    25,    26,    27,
-      28,    29,    30,    59,    17,    18,    82,    42,    70,    73,
-      60,    22,    23,    24,    25,    26,    27,    28,    29,    30,
-       3,     3,    61,    79,    78,    50,    51,    52,    53,    54,
-      55,     0,     0,     4,     4,     5,     5
+      32,    46,    32,    49,   -32,    41,   -32,    39,   -32,   -32,
+      42,   -33,    44,   -33,    32,   -33,   -33,    76,    77,    78,
+      40,    60,    11,     1,     2,     3,    49,    12,     3,    11,
+      32,    67,    79,    47,    12,    50,    73,   -32,     4,     3,
+       5,     4,    85,     5,   -33,    64,    65,    48,    32,    32,
+      49,    45,     4,   -22,     5,    58,    32,    15,    16,    17,
+      18,    19,    20,     4,    59,    21,    22,    23,    24,    25,
+      26,    27,    28,    29,    30,    86,    43,    61,    17,    18,
+      19,    74,     4,    31,    21,    22,    23,    24,    25,    26,
+      27,    28,    29,    30,    61,    17,    18,    72,    75,    63,
+       0,    62,    22,    23,    24,    25,    26,    27,    28,    29,
+      30,    80,     0,     3,     0,     0,     0,    81,    80,    80,
+      80,     3,     3,     0,    83,    82,     4,    80,     5,     0,
+       0,     0,     0,     0,     4,     4,     5,     5,     0,    51,
+      52,    53,    54,    55,    56
 };
 
 static const yytype_int8 yycheck[] =
 {
-       1,    15,     3,     6,    11,     8,     3,    10,    11,    57,
-      58,     6,    67,     8,    15,    10,    11,    27,     8,    74,
-      75,    11,     3,     4,     5,     5,    81,     0,     5,     9,
-      31,    79,    39,    37,    31,    49,    39,    18,    18,    20,
-      20,    18,     0,    20,    39,     0,     6,    48,    49,     7,
-      36,    11,     7,    19,    20,    56,    12,    13,    14,    15,
-      16,    17,    18,    37,    20,    21,    22,    23,    24,    25,
-      26,    27,    28,    29,    10,     8,    13,    14,    15,    16,
-      17,    18,    38,    20,    21,    22,    23,    24,    25,    26,
-      27,    28,    29,    13,    14,    15,     9,     7,    48,    56,
-      20,    21,    22,    23,    24,    25,    26,    27,    28,    29,
-       5,     5,    43,     7,     9,    30,    31,    32,    33,    34,
-      35,    -1,    -1,    18,    18,    20,    20
+       1,    15,     3,    11,     6,     3,     8,    27,    10,    11,
+       0,     6,    36,     8,    15,    10,    11,    58,    59,    60,
+      40,     6,     0,     3,     4,     5,    11,     0,     5,     7,
+      31,    39,     9,    31,     7,    10,    50,    39,    18,     5,
+      20,    18,    83,    20,    39,    19,    20,     8,    49,    50,
+      11,    37,    18,    37,    20,     8,    57,    12,    13,    14,
+      15,    16,    17,    18,     8,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,     9,     7,    13,    14,    15,
+      16,    17,    18,    38,    20,    21,    22,    23,    24,    25,
+      26,    27,    28,    29,    13,    14,    15,    49,    57,    44,
+      -1,    20,    21,    22,    23,    24,    25,    26,    27,    28,
+      29,    69,    -1,     5,    -1,    -1,    -1,     9,    76,    77,
+      78,     5,     5,    -1,     7,     9,    18,    85,    20,    -1,
+      -1,    -1,    -1,    -1,    18,    18,    20,    20,    -1,    30,
+      31,    32,    33,    34,    35
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -706,33 +710,33 @@ static const yytype_int8 yystos[] =
       46,    47,    51,    52,    53,    12,    13,    14,    15,    16,
       17,    20,    21,    22,    23,    24,    25,    26,    27,    28,
       29,    38,    52,    55,    56,    57,    58,    59,    61,    27,
-      55,     0,    44,    36,    37,    57,    55,     8,    11,    10,
-      30,    31,    32,    33,    34,    35,    60,     8,     6,    13,
-      20,    61,    19,    20,    54,    39,    47,    49,    50,    51,
-      56,    57,    17,    59,    49,    49,     9,    50,     9,     7,
-      48,    49,     9
+      40,    55,     0,    44,    36,    37,    57,    55,     8,    11,
+      10,    30,    31,    32,    33,    34,    35,    60,     8,     8,
+       6,    13,    20,    61,    19,    20,    54,    39,    47,    49,
+      50,    51,    56,    57,    17,    59,    49,    49,    49,     9,
+      50,     9,     9,     7,    48,    49,     9
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    41,    42,    43,    43,    44,    44,    44,    44,    45,
-      46,    47,    48,    48,    49,    49,    50,    50,    51,    52,
-      53,    53,    54,    54,    55,    55,    56,    56,    57,    57,
-      57,    57,    57,    58,    59,    59,    59,    59,    60,    60,
-      60,    60,    60,    60,    61,    61,    61,    61,    61,    61,
-      61,    61,    61,    61,    61,    61,    61
+      46,    46,    47,    48,    48,    49,    49,    50,    50,    51,
+      52,    53,    53,    54,    54,    55,    55,    56,    56,    57,
+      57,    57,    57,    57,    58,    59,    59,    59,    59,    60,
+      60,    60,    60,    60,    60,    61,    61,    61,    61,    61,
+      61,    61,    61,    61,    61,    61,    61,    61
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     1,     2,     1,     1,     1,     1,     5,
-       5,     6,     0,     2,     1,     2,     1,     1,     3,     3,
-       1,     1,     1,     1,     3,     1,     3,     1,     2,     3,
-       1,     1,     1,     3,     1,     1,     1,     1,     1,     1,
+       5,     5,     6,     0,     2,     1,     2,     1,     1,     3,
+       3,     1,     1,     1,     1,     3,     1,     3,     1,     2,
+       3,     1,     1,     1,     3,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1
+       1,     1,     1,     1,     1,     1,     1,     1
 };
 
 
@@ -1195,236 +1199,244 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 18: /* asignacion: dispositivo_atributo TOK_IGUAL valor  */
-#line 100 "parser.y"
+  case 11: /* bloque_every: TOK_EVERY TOK_ERROR_LEXICO TOK_DO lista_acciones TOK_END  */
+#line 78 "parser.y"
+      {
+          free((yyvsp[-3].texto));
+      }
+#line 1208 "parser_smart_home.c"
+    break;
+
+  case 19: /* asignacion: dispositivo_atributo TOK_IGUAL valor  */
+#line 104 "parser.y"
       {
           validar_y_registrar_asignacion((yyvsp[-2].operand), (yyvsp[0].valor));
           liberar_operando((yyvsp[-2].operand));
           liberar_valor((yyvsp[0].valor));
           free((yyvsp[-1].texto));
       }
-#line 1207 "parser_smart_home.c"
+#line 1219 "parser_smart_home.c"
     break;
 
-  case 19: /* dispositivo_atributo: dispositivo TOK_PUNTO atributo  */
-#line 110 "parser.y"
+  case 20: /* dispositivo_atributo: dispositivo TOK_PUNTO atributo  */
+#line 114 "parser.y"
       {
           (yyval.operand) = crear_operando_atributo((yyvsp[-2].texto), (yyvsp[0].texto));
           free((yyvsp[-1].texto));
       }
-#line 1216 "parser_smart_home.c"
+#line 1228 "parser_smart_home.c"
     break;
 
-  case 20: /* dispositivo: TOK_ID_DISPOSITIVO  */
-#line 117 "parser.y"
+  case 21: /* dispositivo: TOK_ID_DISPOSITIVO  */
+#line 121 "parser.y"
                          { (yyval.texto) = (yyvsp[0].texto); }
-#line 1222 "parser_smart_home.c"
+#line 1234 "parser_smart_home.c"
     break;
 
-  case 21: /* dispositivo: TOK_ID  */
-#line 119 "parser.y"
+  case 22: /* dispositivo: TOK_ID  */
+#line 123 "parser.y"
       {
           registrar_error_semantico(linea_token, (yyvsp[0].texto), "dispositivo no reconocido o prefijo invalido");
           (yyval.texto) = (yyvsp[0].texto);
       }
-#line 1231 "parser_smart_home.c"
+#line 1243 "parser_smart_home.c"
     break;
 
-  case 22: /* atributo: TOK_ATRIBUTO  */
-#line 126 "parser.y"
+  case 23: /* atributo: TOK_ATRIBUTO  */
+#line 130 "parser.y"
                    { (yyval.texto) = (yyvsp[0].texto); }
-#line 1237 "parser_smart_home.c"
+#line 1249 "parser_smart_home.c"
     break;
 
-  case 23: /* atributo: TOK_ID  */
-#line 128 "parser.y"
+  case 24: /* atributo: TOK_ID  */
+#line 132 "parser.y"
       {
           registrar_error_semantico(linea_token, (yyvsp[0].texto), "atributo no reconocido");
           (yyval.texto) = (yyvsp[0].texto);
       }
-#line 1246 "parser_smart_home.c"
+#line 1258 "parser_smart_home.c"
     break;
 
-  case 31: /* factor_logico: TOK_BOOL  */
-#line 149 "parser.y"
+  case 32: /* factor_logico: TOK_BOOL  */
+#line 153 "parser.y"
       {
           if (!bool_true_false((yyvsp[0].texto))) {
               registrar_error_semantico(linea_token, (yyvsp[0].texto), "en una condicion booleana se esperaba TRUE o FALSE");
           }
           free((yyvsp[0].texto));
       }
-#line 1257 "parser_smart_home.c"
+#line 1269 "parser_smart_home.c"
     break;
 
-  case 32: /* factor_logico: TOK_ID_SENSOR_BOOL  */
-#line 156 "parser.y"
+  case 33: /* factor_logico: TOK_ID_SENSOR_BOOL  */
+#line 160 "parser.y"
       {
           agregar_sensor_html((yyvsp[0].texto), "", "TRUE/FALSE");
           free((yyvsp[0].texto));
       }
-#line 1266 "parser_smart_home.c"
+#line 1278 "parser_smart_home.c"
     break;
 
-  case 33: /* comparacion: operando operador_comparacion operando  */
-#line 164 "parser.y"
+  case 34: /* comparacion: operando operador_comparacion operando  */
+#line 168 "parser.y"
       {
           validar_comparacion((yyvsp[-2].operand), (yyvsp[-1].texto), (yyvsp[0].operand));
           liberar_operando((yyvsp[-2].operand));
           free((yyvsp[-1].texto));
           liberar_operando((yyvsp[0].operand));
       }
-#line 1277 "parser_smart_home.c"
+#line 1289 "parser_smart_home.c"
     break;
 
-  case 34: /* operando: TOK_ID_SENSOR_NUM  */
-#line 174 "parser.y"
+  case 35: /* operando: TOK_ID_SENSOR_NUM  */
+#line 178 "parser.y"
       {
           (yyval.operand) = crear_operando_simple((yyvsp[0].texto), OP_SENSOR_NUM);
       }
-#line 1285 "parser_smart_home.c"
+#line 1297 "parser_smart_home.c"
     break;
 
-  case 35: /* operando: TOK_ID_SENSOR_BOOL  */
-#line 178 "parser.y"
+  case 36: /* operando: TOK_ID_SENSOR_BOOL  */
+#line 182 "parser.y"
       {
           (yyval.operand) = crear_operando_simple((yyvsp[0].texto), OP_SENSOR_BOOL);
       }
-#line 1293 "parser_smart_home.c"
+#line 1305 "parser_smart_home.c"
     break;
 
-  case 36: /* operando: dispositivo_atributo  */
-#line 182 "parser.y"
+  case 37: /* operando: dispositivo_atributo  */
+#line 186 "parser.y"
       {
           (yyval.operand) = (yyvsp[0].operand);
       }
-#line 1301 "parser_smart_home.c"
+#line 1313 "parser_smart_home.c"
     break;
 
-  case 37: /* operando: valor  */
-#line 186 "parser.y"
+  case 38: /* operando: valor  */
+#line 190 "parser.y"
       {
           (yyval.operand) = crear_operando_valor((yyvsp[0].valor));
           liberar_valor((yyvsp[0].valor));
       }
-#line 1310 "parser_smart_home.c"
-    break;
-
-  case 38: /* operador_comparacion: TOK_IGUALDAD  */
-#line 193 "parser.y"
-                       { (yyval.texto) = (yyvsp[0].texto); }
-#line 1316 "parser_smart_home.c"
-    break;
-
-  case 39: /* operador_comparacion: TOK_DIFERENTE  */
-#line 194 "parser.y"
-                       { (yyval.texto) = (yyvsp[0].texto); }
 #line 1322 "parser_smart_home.c"
     break;
 
-  case 40: /* operador_comparacion: TOK_MAYOR  */
-#line 195 "parser.y"
+  case 39: /* operador_comparacion: TOK_IGUALDAD  */
+#line 197 "parser.y"
                        { (yyval.texto) = (yyvsp[0].texto); }
 #line 1328 "parser_smart_home.c"
     break;
 
-  case 41: /* operador_comparacion: TOK_MENOR  */
-#line 196 "parser.y"
+  case 40: /* operador_comparacion: TOK_DIFERENTE  */
+#line 198 "parser.y"
                        { (yyval.texto) = (yyvsp[0].texto); }
 #line 1334 "parser_smart_home.c"
     break;
 
-  case 42: /* operador_comparacion: TOK_MAYOR_IGUAL  */
-#line 197 "parser.y"
+  case 41: /* operador_comparacion: TOK_MAYOR  */
+#line 199 "parser.y"
                        { (yyval.texto) = (yyvsp[0].texto); }
 #line 1340 "parser_smart_home.c"
     break;
 
-  case 43: /* operador_comparacion: TOK_MENOR_IGUAL  */
-#line 198 "parser.y"
+  case 42: /* operador_comparacion: TOK_MENOR  */
+#line 200 "parser.y"
                        { (yyval.texto) = (yyvsp[0].texto); }
 #line 1346 "parser_smart_home.c"
     break;
 
-  case 44: /* valor: TOK_BOOL  */
-#line 202 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_BOOL); }
+  case 43: /* operador_comparacion: TOK_MAYOR_IGUAL  */
+#line 201 "parser.y"
+                       { (yyval.texto) = (yyvsp[0].texto); }
 #line 1352 "parser_smart_home.c"
     break;
 
-  case 45: /* valor: TOK_MODO  */
-#line 203 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_MODO); }
+  case 44: /* operador_comparacion: TOK_MENOR_IGUAL  */
+#line 202 "parser.y"
+                       { (yyval.texto) = (yyvsp[0].texto); }
 #line 1358 "parser_smart_home.c"
     break;
 
-  case 46: /* valor: TOK_COLOR  */
-#line 204 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_COLOR); }
+  case 45: /* valor: TOK_BOOL  */
+#line 206 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_BOOL); }
 #line 1364 "parser_smart_home.c"
     break;
 
-  case 47: /* valor: TOK_EMAIL  */
-#line 205 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_EMAIL); }
+  case 46: /* valor: TOK_MODO  */
+#line 207 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_MODO); }
 #line 1370 "parser_smart_home.c"
     break;
 
-  case 48: /* valor: TOK_TEXTO  */
-#line 206 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_TEXTO); }
+  case 47: /* valor: TOK_COLOR  */
+#line 208 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_COLOR); }
 #line 1376 "parser_smart_home.c"
     break;
 
-  case 49: /* valor: TOK_HORA  */
-#line 207 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_HORA); }
+  case 48: /* valor: TOK_EMAIL  */
+#line 209 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_EMAIL); }
 #line 1382 "parser_smart_home.c"
     break;
 
-  case 50: /* valor: TOK_FECHA  */
-#line 208 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_FECHA); }
+  case 49: /* valor: TOK_TEXTO  */
+#line 210 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_TEXTO); }
 #line 1388 "parser_smart_home.c"
     break;
 
-  case 51: /* valor: TOK_NUM_TEMP  */
-#line 209 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_TEMP); }
+  case 50: /* valor: TOK_HORA  */
+#line 211 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_HORA); }
 #line 1394 "parser_smart_home.c"
     break;
 
-  case 52: /* valor: TOK_PERCENT  */
-#line 210 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_PERCENT); }
+  case 51: /* valor: TOK_FECHA  */
+#line 212 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_FECHA); }
 #line 1400 "parser_smart_home.c"
     break;
 
-  case 53: /* valor: TOK_TIME  */
-#line 211 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_TIME); }
+  case 52: /* valor: TOK_NUM_TEMP  */
+#line 213 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_TEMP); }
 #line 1406 "parser_smart_home.c"
     break;
 
-  case 54: /* valor: TOK_LUX  */
-#line 212 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_LUX); }
+  case 53: /* valor: TOK_PERCENT  */
+#line 214 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_PERCENT); }
 #line 1412 "parser_smart_home.c"
     break;
 
-  case 55: /* valor: TOK_NUMERO  */
-#line 213 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_NUMERO); }
+  case 54: /* valor: TOK_TIME  */
+#line 215 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_TIME); }
 #line 1418 "parser_smart_home.c"
     break;
 
-  case 56: /* valor: TOK_ID  */
-#line 214 "parser.y"
-                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_ID); }
+  case 55: /* valor: TOK_LUX  */
+#line 216 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_LUX); }
 #line 1424 "parser_smart_home.c"
     break;
 
+  case 56: /* valor: TOK_NUMERO  */
+#line 217 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_NUMERO); }
+#line 1430 "parser_smart_home.c"
+    break;
 
-#line 1428 "parser_smart_home.c"
+  case 57: /* valor: TOK_ID  */
+#line 218 "parser.y"
+                   { (yyval.valor) = crear_valor((yyvsp[0].texto), VAL_ID); }
+#line 1436 "parser_smart_home.c"
+    break;
+
+
+#line 1440 "parser_smart_home.c"
 
       default: break;
     }
@@ -1617,7 +1629,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 217 "parser.y"
+#line 221 "parser.y"
 
 
 void yyerror(const char *mensaje) {

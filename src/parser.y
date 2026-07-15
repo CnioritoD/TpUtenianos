@@ -74,6 +74,10 @@ bloque_when
 
 bloque_every
     : TOK_EVERY TOK_TIME TOK_DO lista_acciones TOK_END
+    | TOK_EVERY TOK_ERROR_LEXICO TOK_DO lista_acciones TOK_END
+      {
+          free($2);
+      }
     ;
 
 bloque_if
