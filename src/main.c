@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
     const char *archivo_entrada;
     char ruta_interactiva[512];
 
+    /* Se puede ejecutar sin argumentos (pide la ruta) o con un archivo .smart. */
     if (argc > 2) {
         fprintf(stderr, "Uso: %s archivo.smart\n", argv[0]);
         return finalizar(1, modo_interactivo);
@@ -51,19 +52,35 @@ int main(int argc, char **argv) {
         return finalizar(1, modo_interactivo);
     }
 
+    /*
+       yyin es la entrada del lexer de Flex. Al apuntarlo al .smart abierto,
+       el lexer lee ese archivo y convierte su texto en tokens para el parser.
+    */
     yyin = fopen(archivo_entrada, "r");
     if (!yyin) {
         fprintf(stderr, "[ERROR DE EJECUCION] No se pudo abrir el archivo: %s\n", archivo_entrada);
         return finalizar(1, modo_interactivo);
     }
 
+    /*
+       Se prepara el nombre del HTML de salida, pero aun no se crea el archivo.
+       Ejemplo: prueba/ejemplo.smart -> ejemplo.html.
+    */
     construir_nombre_html(archivo_entrada);
 
     if (!modo_interactivo) printf("--- Parser SMART-HOME ---\n");
+
+    /*
+       yyparse() inicia el analisis sintactico. Mientras avanza, llama al lexer
+       para pedir tokens como WHEN, sensores, valores y operadores.
+       En esa unica lectura del .smart tambien se validan reglas semanticas y
+       se guardan en memoria los sensores/acciones que luego usa generar_html().
+    */
     resultado = yyparse();
 
     if (yyin && yyin != stdin) fclose(yyin);
 
+    /* El HTML solo se escribe si el archivo paso lexer, parser y semantica. */
     if (resultado == 0 && errores_lexicos == 0 && errores_sintacticos == 0) {
         printf("Analisis lexico y sintactico exitoso.\n");
 

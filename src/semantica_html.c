@@ -8,6 +8,9 @@
 extern int yylineno;
 extern int linea_token;
 
+#define MAX_HTML_ACCIONES 300
+#define MAX_HTML_SENSORES 150
+
 typedef struct {
     char dispositivo[128];
     char atributo[64];
@@ -21,9 +24,6 @@ typedef struct {
     char valor[128];
 } HtmlSensor;
 
-#define MAX_HTML_ACCIONES 300
-#define MAX_HTML_SENSORES 150
-
 int errores_semanticos = 0;
 char archivo_html[512] = "salida.html";
 
@@ -33,6 +33,7 @@ static int cant_acciones_html = 0;
 static HtmlSensor sensores_html[MAX_HTML_SENSORES];
 static int cant_sensores_html = 0;
 
+/* Utilidades generales de texto. */
 static char *copiar_texto(const char *s);
 static int igual_icase(const char *a, const char *b);
 static int esta_en_lista(const char *texto, const char *const lista[]);
@@ -40,6 +41,8 @@ static int empieza_icase(const char *texto, const char *prefijo);
 static int contiene_icase(const char *texto, const char *frag);
 static void a_minusculas(char *dst, const char *src, size_t max);
 static void normalizar_atributo(char *dst, const char *src, size_t max);
+
+/* Reglas de dominio SMART-HOME. */
 static const char *tipo_dispositivo(const char *disp);
 static int atributo_permitido(const char *tipo_disp, const char *attr);
 static int es_solo_lectura(const char *tipo_disp, const char *attr);
@@ -54,8 +57,12 @@ static int fecha_valida_general(const char *texto);
 static int email_valido(const char *texto);
 static int bool_on_off(const char *texto);
 static int valor_es_email_por_atributo(const char *attr);
+
+/* Validaciones llamadas desde las acciones del parser. */
 static void validar_tipo_valor(const char *tipo_disp, const char *attr_original, Valor *valor);
 static void validar_sensor_con_valor(Operand *sensor, const char *op, Operand *valor);
+
+/* Acumulacion y escritura de datos para el HTML. */
 static void agregar_accion_html(const char *disp, const char *attr, const char *valor);
 static void html_escape(FILE *f, const char *s);
 static void html_valor(FILE *f, const char *attr, const char *valor);
@@ -74,6 +81,66 @@ static char *copiar_texto(const char *s) {
     return r;
 }
 
+static int igual_icase(const char *a, const char *b) {
+    if (!a || !b) return 0;
+    while (*a && *b) {
+        if (tolower((unsigned char)*a) != tolower((unsigned char)*b)) return 0;
+        a++;
+        b++;
+    }
+    return *a == '\0' && *b == '\0';
+}
+
+static int esta_en_lista(const char *texto, const char *const lista[]) {
+    int i;
+    if (!texto || !lista) return 0;
+    for (i = 0; lista[i]; i++) {
+        if (igual_icase(texto, lista[i])) return 1;
+    }
+    return 0;
+}
+
+static int empieza_icase(const char *texto, const char *prefijo) {
+    if (!texto || !prefijo) return 0;
+    while (*prefijo) {
+        if (tolower((unsigned char)*texto) != tolower((unsigned char)*prefijo)) return 0;
+        texto++;
+        prefijo++;
+    }
+    return 1;
+}
+
+static int contiene_icase(const char *texto, const char *frag) {
+    size_t n, m, i, j;
+    if (!texto || !frag) return 0;
+    n = strlen(texto);
+    m = strlen(frag);
+    if (m == 0 || m > n) return 0;
+    for (i = 0; i <= n - m; i++) {
+        for (j = 0; j < m; j++) {
+            if (tolower((unsigned char)texto[i + j]) != tolower((unsigned char)frag[j])) break;
+        }
+        if (j == m) return 1;
+    }
+    return 0;
+}
+
+static void a_minusculas(char *dst, const char *src, size_t max) {
+    size_t i;
+    for (i = 0; src && src[i] && i + 1 < max; i++) {
+        dst[i] = (char)tolower((unsigned char)src[i]);
+    }
+    dst[i] = '\0';
+}
+
+static void normalizar_atributo(char *dst, const char *src, size_t max) {
+    a_minusculas(dst, src, max);
+    if (igual_icase(dst, "temp_objetivo")) strncpy(dst, "temp_obj", max);
+    if (igual_icase(dst, "temp_actual")) strncpy(dst, "temp_act", max);
+    dst[max - 1] = '\0';
+}
+
+/* Creacion/liberacion de valores semanticos usados por Bison. */
 Valor *crear_valor(char *texto, int tipo) {
     Valor *v = (Valor *)malloc(sizeof(Valor));
     if (!v) exit(1);
@@ -134,65 +201,6 @@ void registrar_error_semantico(int linea, const char *lexema, const char *mensaj
             linea > 0 ? linea : yylineno,
             mensaje,
             lexema ? lexema : "");
-}
-
-static int igual_icase(const char *a, const char *b) {
-    if (!a || !b) return 0;
-    while (*a && *b) {
-        if (tolower((unsigned char)*a) != tolower((unsigned char)*b)) return 0;
-        a++;
-        b++;
-    }
-    return *a == '\0' && *b == '\0';
-}
-
-static int esta_en_lista(const char *texto, const char *const lista[]) {
-    int i;
-    if (!texto || !lista) return 0;
-    for (i = 0; lista[i]; i++) {
-        if (igual_icase(texto, lista[i])) return 1;
-    }
-    return 0;
-}
-
-static int empieza_icase(const char *texto, const char *prefijo) {
-    if (!texto || !prefijo) return 0;
-    while (*prefijo) {
-        if (tolower((unsigned char)*texto) != tolower((unsigned char)*prefijo)) return 0;
-        texto++;
-        prefijo++;
-    }
-    return 1;
-}
-
-static int contiene_icase(const char *texto, const char *frag) {
-    size_t n, m, i, j;
-    if (!texto || !frag) return 0;
-    n = strlen(texto);
-    m = strlen(frag);
-    if (m == 0 || m > n) return 0;
-    for (i = 0; i <= n - m; i++) {
-        for (j = 0; j < m; j++) {
-            if (tolower((unsigned char)texto[i + j]) != tolower((unsigned char)frag[j])) break;
-        }
-        if (j == m) return 1;
-    }
-    return 0;
-}
-
-static void a_minusculas(char *dst, const char *src, size_t max) {
-    size_t i;
-    for (i = 0; src && src[i] && i + 1 < max; i++) {
-        dst[i] = (char)tolower((unsigned char)src[i]);
-    }
-    dst[i] = '\0';
-}
-
-static void normalizar_atributo(char *dst, const char *src, size_t max) {
-    a_minusculas(dst, src, max);
-    if (igual_icase(dst, "temp_objetivo")) strncpy(dst, "temp_obj", max);
-    if (igual_icase(dst, "temp_actual")) strncpy(dst, "temp_act", max);
-    dst[max - 1] = '\0';
 }
 
 static const char *tipo_dispositivo(const char *disp) {
