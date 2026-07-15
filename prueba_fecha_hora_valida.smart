@@ -1,0 +1,8 @@
+// Prueba valida de hora y fecha
+IF reloj_cocina.hora >= 12:30 THEN
+foco_cocina.estado = ON
+END
+
+IF reloj_cocina.fecha == 14/07/2026 THEN
+alarma_casa.estado = ON
+END
