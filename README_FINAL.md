@@ -1,6 +1,7 @@
 # SMART-HOME - Utenianos - Entrega final
 
-Esta version incluye lexer Flex, parser Bison, validaciones semanticas basicas y generacion de HTML para scripts validos.
+Esta version incluye lexer Flex, parser Bison, validaciones semanticas y generacion de HTML para scripts validos.
+El codigo fuente esta separado en modulos para que la gramatica, el flujo principal, las validaciones y la salida HTML sean faciles de revisar.
 
 ## Regla de generacion de HTML
 
@@ -13,7 +14,7 @@ Esta version incluye lexer Flex, parser Bison, validaciones semanticas basicas y
 
 - `doc/`: contiene el informe final con documentacion, gramatica, modo de ejecucion, limitaciones, consideraciones y ejemplos.
 - `bin/`: contiene el ejecutable final listo para usar.
-- `src/`: contiene las entradas fuente usadas por los generadores Flex/Bison.
+- `src/`: contiene los archivos fuente editables. Los archivos generados por Flex/Bison se crean al compilar.
 - `prueba/`: contiene archivos `.smart` validos e invalidos para verificar el funcionamiento.
 
 ## Archivos principales
@@ -21,7 +22,8 @@ Esta version incluye lexer Flex, parser Bison, validaciones semanticas basicas y
 - `src/lexer_smart_home.l`: lexer Flex conectado con Bison.
 - `src/parser.y`: parser Bison con la gramatica y acciones semanticas.
 - `src/main.c`: entrada del programa, apertura del archivo y flujo de salida.
-- `src/semantica_html.c/.h`: validaciones semanticas, utilidades y generacion HTML.
+- `src/semantica_html.c`: validaciones semanticas, utilidades y generacion HTML.
+- `src/semantica_html.h`: tipos compartidos e interfaz usada por el parser y el programa principal.
 - `bin/smart_home_parser.exe`: ejecutable final.
 - `prueba/`: archivos `.smart` de prueba.
 
@@ -37,7 +39,8 @@ gcc -Wall -Wextra -std=c11 main.c parser_smart_home.c lexer_smart_home.c semanti
 cd ..
 ```
 
-Los archivos generados por Flex/Bison (`parser_smart_home.c`, `parser_smart_home.h`, `lexer_smart_home.c`) no se incluyen como fuente principal de entrega porque se entregan las entradas al generador: `parser.y` y `lexer_smart_home.l`.
+Los archivos generados por Flex/Bison (`parser_smart_home.c`, `parser_smart_home.h`, `lexer_smart_home.c`) no se versionan como fuente principal porque se pueden regenerar desde `parser.y` y `lexer_smart_home.l`.
+Si se desea dejar `src/` limpio despues de compilar, se pueden borrar esos tres archivos generados.
 
 ## Ejecutar parser final
 
@@ -56,6 +59,21 @@ Tambien se puede ejecutar con otros archivos:
 ./bin/smart_home_parser.exe "prueba/pruebalexer.smart"
 ./bin/smart_home_parser.exe "prueba/pruebalexerinvalidos.smart"
 ```
+
+## Probar todos los ejemplos
+
+Desde la carpeta principal del proyecto:
+
+```bash
+./bin/smart_home_parser.exe "prueba/ejemplo_consigna.smart"
+./bin/smart_home_parser.exe "prueba/ejemplo_valido_catedra.smart"
+./bin/smart_home_parser.exe "prueba/error_semantico_puro.smart"
+./bin/smart_home_parser.exe "prueba/ejemplo_errores_catedra.smart"
+./bin/smart_home_parser.exe "prueba/pruebalexer.smart"
+./bin/smart_home_parser.exe "prueba/pruebalexerinvalidos.smart"
+```
+
+Los dos primeros casos deben finalizar con codigo `0`. El archivo `error_semantico_puro.smart` debe finalizar con codigo `2`. Los archivos con errores lexicos o sintacticos deben finalizar con codigo `1`.
 
 ## Salida esperada
 
