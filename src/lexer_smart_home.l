@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "parser.tab.h"
+#include "parser_smart_home.h"
 
 int errores_lexicos = 0;
 int linea_token = 1;

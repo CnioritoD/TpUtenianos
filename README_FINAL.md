@@ -18,8 +18,10 @@ Esta version incluye lexer Flex, parser Bison, validaciones semanticas basicas y
 
 ## Archivos principales
 
-- `src/smart_home_parser.l`: lexer Flex conectado con Bison.
-- `src/parser.y`: parser Bison, validaciones semanticas y generacion HTML.
+- `src/lexer_smart_home.l`: lexer Flex conectado con Bison.
+- `src/parser.y`: parser Bison con la gramatica y acciones semanticas.
+- `src/main.c`: entrada del programa, apertura del archivo y flujo de salida.
+- `src/semantica_html.c/.h`: validaciones semanticas, utilidades y generacion HTML.
 - `bin/smart_home_parser.exe`: ejecutable final.
 - `prueba/`: archivos `.smart` de prueba.
 
@@ -29,13 +31,13 @@ Usar MSYS2 UCRT64 desde la carpeta principal del proyecto:
 
 ```bash
 cd src
-bison -d parser.y
-flex -o lex.parser.c smart_home_parser.l
-gcc -Wall -Wextra -std=c11 parser.tab.c lex.parser.c -o ../bin/smart_home_parser.exe
+bison -d -o parser_smart_home.c parser.y
+flex -o lexer_smart_home.c lexer_smart_home.l
+gcc -Wall -Wextra -std=c11 main.c parser_smart_home.c lexer_smart_home.c semantica_html.c -o ../bin/smart_home_parser.exe
 cd ..
 ```
 
-Los archivos generados por Flex/Bison (`parser.tab.c`, `parser.tab.h`, `lex.parser.c`) no se incluyen como fuente principal de entrega porque se entregan las entradas al generador: `parser.y` y `smart_home_parser.l`.
+Los archivos generados por Flex/Bison (`parser_smart_home.c`, `parser_smart_home.h`, `lexer_smart_home.c`) no se incluyen como fuente principal de entrega porque se entregan las entradas al generador: `parser.y` y `lexer_smart_home.l`.
 
 ## Ejecutar parser final
 
@@ -90,7 +92,7 @@ Analisis finalizado con errores lexicos o sintacticos. No se genera HTML.
 - `sensor_temp` / `sensor_temp_int`: -10C a 50C.
 - `temp_obj`: 16C a 30C.
 - `hora`: 00:00 a 23:59.
-- `fecha`: formato DD/MM/AAAA con rangos basicos.
+- `fecha`: formato DD/MM/AAAA con dia real del mes y anios bisiestos.
 - `email`: estructura usuario@dominio.extension y sin puntos consecutivos.
 - atributos de solo lectura: `aire_*.temp_act`, `reloj_*.hora`, `reloj_*.fecha`.
 - atributos permitidos segun tipo de dispositivo.
