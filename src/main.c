@@ -17,7 +17,11 @@ int main(int argc, char **argv) {
     const char *archivo_entrada;
     char ruta_interactiva[512];
 
-    /* Se puede ejecutar sin argumentos (pide la ruta) o con un archivo .smart. */
+    /*
+       El programa puede usarse de dos maneras:
+       - sin argumentos: pide por pantalla la ruta del archivo .smart;
+       - con un argumento: usa esa ruta directamente.
+    */
     if (argc > 2) {
         fprintf(stderr, "Uso: %s archivo.smart\n", argv[0]);
         return finalizar(1, modo_interactivo);
@@ -53,8 +57,9 @@ int main(int argc, char **argv) {
     }
 
     /*
-       yyin es la entrada del lexer de Flex. Al apuntarlo al .smart abierto,
-       el lexer lee ese archivo y convierte su texto en tokens para el parser.
+       yyin es la entrada que usa Flex. Al asignarle el archivo abierto,
+       le indicamos al analizador lexico que debe leer caracteres desde
+       este .smart y no desde la consola.
     */
     yyin = fopen(archivo_entrada, "r");
     if (!yyin) {
@@ -63,24 +68,33 @@ int main(int argc, char **argv) {
     }
 
     /*
-       Se prepara el nombre del HTML de salida, pero aun no se crea el archivo.
-       Ejemplo: prueba/ejemplo.smart -> ejemplo.html.
+       Esto solo calcula el nombre del HTML de salida. Por ejemplo:
+       prueba/ejemplo.smart -> ejemplo.html.
+       Todavia no se crea ningun archivo HTML.
     */
     construir_nombre_html(archivo_entrada);
 
     if (!modo_interactivo) printf("--- Parser SMART-HOME ---\n");
 
     /*
-       yyparse() inicia el analisis sintactico. Mientras avanza, llama al lexer
-       para pedir tokens como WHEN, sensores, valores y operadores.
-       En esa unica lectura del .smart tambien se validan reglas semanticas y
-       se guardan en memoria los sensores/acciones que luego usa generar_html().
+       yyparse() inicia el analisis del archivo.
+       Internamente llama al lexer para convertir el texto en tokens.
+       Con esos tokens, el parser revisa que las instrucciones respeten
+       la gramatica del lenguaje SMART-HOME.
+
+       El .smart se lee una sola vez. Durante esa misma pasada se validan
+       reglas semanticas y se guardan en memoria los sensores/acciones que
+       despues usa generar_html().
     */
     resultado = yyparse();
 
     if (yyin && yyin != stdin) fclose(yyin);
 
-    /* El HTML solo se escribe si el archivo paso lexer, parser y semantica. */
+    /*
+       Solo se genera HTML si no hubo errores lexicos, sintacticos ni
+       semanticos. Asi evitamos crear una salida para un programa .smart
+       que no es valido.
+    */
     if (resultado == 0 && errores_lexicos == 0 && errores_sintacticos == 0) {
         printf("Analisis lexico y sintactico exitoso.\n");
 
