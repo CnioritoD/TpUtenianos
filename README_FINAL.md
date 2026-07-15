@@ -27,6 +27,30 @@ El codigo fuente esta separado en modulos para que la gramatica, el flujo princi
 - `bin/smart_home_parser.exe`: ejecutable final.
 - `prueba/`: archivos `.smart` de prueba.
 
+## Instalar herramientas
+
+Para compilar desde Windows se recomienda usar MSYS2 UCRT64.
+Abrir la terminal **MSYS2 UCRT64** e instalar las herramientas necesarias:
+
+```bash
+pacman -S --needed bison flex mingw-w64-ucrt-x86_64-gcc
+```
+
+Verificar que quedaron disponibles:
+
+```bash
+bison --version
+flex --version
+gcc --version
+```
+
+Si se compila desde PowerShell o CMD, agregar estas carpetas al `PATH`:
+
+```text
+C:\msys64\usr\bin
+C:\msys64\ucrt64\bin
+```
+
 ## Compilar parser final
 
 Usar MSYS2 UCRT64 desde la carpeta principal del proyecto:
