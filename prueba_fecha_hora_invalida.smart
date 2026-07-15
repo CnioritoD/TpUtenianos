@@ -1,8 +1,0 @@
-// Prueba invalida de hora y fecha
-IF reloj_cocina.hora >= 29:70 THEN
-foco_cocina.estado = ON
-END
-
-IF reloj_cocina.fecha == 35/15/1800 THEN
-alarma_casa.estado = ON
-END
