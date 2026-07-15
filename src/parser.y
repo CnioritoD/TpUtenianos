@@ -1,9 +1,10 @@
 /* Parser SMART-HOME con analisis sintactico, validaciones semanticas
-   y generacion de HTML parcial/correcto.
+   y generacion de HTML para scripts validos.
 
    Regla de salida:
    - Error lexico o sintactico: no se genera HTML.
-   - Error semantico: se informa el error y se genera HTML parcial.
+   - Error semantico: se informa el error y no se genera HTML.
+   - Sin errores: se genera el archivo HTML correspondiente.
 */
 
 %code requires {
@@ -29,6 +30,7 @@ typedef struct Operand {
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 #ifndef SMART_HOME_TYPES_DEFINED
 #define SMART_HOME_TYPES_DEFINED
@@ -57,10 +59,14 @@ static int errores_sintacticos = 0;
 static int errores_semanticos = 0;
 static const char *archivo_entrada = NULL;
 static char archivo_html[512] = "salida.html";
+static char archivo_html_temporal[520] = "salida.html.tmp";
+static int error_generacion_html = 0;
 
 void yyerror(const char *mensaje);
 static int tiene_extension_smart(const char *ruta);
 static void construir_nombre_html(const char *ruta);
+static void mostrar_fecha_hora_ejecucion(void);
+static void mostrar_resumen_errores(void);
 static char *copiar_texto(const char *s);
 
 /* Tipos de valores reconocidos por el lexer. */
@@ -120,7 +126,10 @@ static void liberar_operando(Operand *o);
 static void registrar_error_semantico(int linea, const char *lexema, const char *mensaje);
 static void validar_y_registrar_asignacion(Operand *destino, Valor *valor);
 static void validar_comparacion(Operand *izq, const char *op, Operand *der);
-static void generar_html(void);
+static int generar_html_en_ruta(const char *ruta);
+static void actualizar_html_durante_parseo(void);
+static int confirmar_html_final(void);
+static void descartar_html_temporal(void);
 
 static int igual_icase(const char *a, const char *b);
 static int empieza_icase(const char *texto, const char *prefijo);
@@ -325,8 +334,16 @@ valor
     | TOK_COLOR    { $$ = crear_valor($1, VAL_COLOR); }
     | TOK_EMAIL    { $$ = crear_valor($1, VAL_EMAIL); }
     | TOK_TEXTO    { $$ = crear_valor($1, VAL_TEXTO); }
-    | TOK_HORA     { $$ = crear_valor($1, VAL_HORA); }
-    | TOK_FECHA    { $$ = crear_valor($1, VAL_FECHA); }
+    | TOK_HORA
+      {
+          printf("[TOKEN HORA] Linea %d: %s\n", linea_token, $1);
+          $$ = crear_valor($1, VAL_HORA);
+      }
+    | TOK_FECHA
+      {
+          printf("[TOKEN FECHA] Linea %d: %s\n", linea_token, $1);
+          $$ = crear_valor($1, VAL_FECHA);
+      }
     | TOK_NUM_TEMP { $$ = crear_valor($1, VAL_TEMP); }
     | TOK_PERCENT  { $$ = crear_valor($1, VAL_PERCENT); }
     | TOK_TIME     { $$ = crear_valor($1, VAL_TIME); }
@@ -690,6 +707,7 @@ static void agregar_accion_html(const char *disp, const char *attr, const char *
     snprintf(acciones_html[cant_acciones_html].valor, sizeof(acciones_html[cant_acciones_html].valor), "%s", valor ? valor : "");
     acciones_html[cant_acciones_html].es_email = attr && valor_es_email_por_atributo(attr);
     cant_acciones_html++;
+    actualizar_html_durante_parseo();
 }
 
 static void agregar_sensor_html(const char *nombre, const char *op, const char *valor) {
@@ -702,6 +720,7 @@ static void agregar_sensor_html(const char *nombre, const char *op, const char *
     snprintf(sensores_html[cant_sensores_html].operador, sizeof(sensores_html[cant_sensores_html].operador), "%s", op ? op : "");
     snprintf(sensores_html[cant_sensores_html].valor, sizeof(sensores_html[cant_sensores_html].valor), "%s", valor ? valor : "");
     cant_sensores_html++;
+    actualizar_html_durante_parseo();
 }
 
 static void html_escape(FILE *f, const char *s) {
@@ -736,21 +755,21 @@ static void html_valor(FILE *f, const char *attr, const char *valor) {
     }
 }
 
-static void generar_html(void) {
-    FILE *f = fopen(archivo_html, "w");
+static int generar_html_en_ruta(const char *ruta) {
+    FILE *f = fopen(ruta, "w");
     int i, j;
     if (!f) {
-        fprintf(stderr, "[ERROR DE EJECUCION] No se pudo crear el archivo HTML: %s\n", archivo_html);
-        return;
+        if (!error_generacion_html) {
+            fprintf(stderr, "[ERROR DE EJECUCION] No se pudo crear el archivo HTML temporal: %s\n", ruta);
+        }
+        error_generacion_html = 1;
+        return 0;
     }
 
     fprintf(f, "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\">\n");
     fprintf(f, "<title>SMART-HOME</title>\n</head>\n<body>\n");
     fprintf(f, "<h1>Dashboard SMART-HOME</h1>\n");
 
-    if (errores_semanticos > 0) {
-        fprintf(f, "<p><strong>HTML generado parcialmente: existen errores semanticos informados por consola.</strong></p>\n");
-    }
 
     fprintf(f, "<div style=\"border:1px solid green; padding:20px; margin:10px;\">\n");
     fprintf(f, "<h1>Estado de sensores y condiciones</h1>\n");
@@ -798,6 +817,28 @@ static void generar_html(void) {
 
     fprintf(f, "</body>\n</html>\n");
     fclose(f);
+    return 1;
+}
+
+static void actualizar_html_durante_parseo(void) {
+    if (!error_generacion_html) {
+        generar_html_en_ruta(archivo_html_temporal);
+    }
+}
+
+static int confirmar_html_final(void) {
+    if (error_generacion_html) return 0;
+
+    remove(archivo_html);
+    if (rename(archivo_html_temporal, archivo_html) != 0) {
+        fprintf(stderr, "[ERROR DE EJECUCION] No se pudo finalizar el archivo HTML: %s\n", archivo_html);
+        return 0;
+    }
+    return 1;
+}
+
+static void descartar_html_temporal(void) {
+    remove(archivo_html_temporal);
 }
 
 static int tiene_extension_smart(const char *ruta) {
@@ -816,6 +857,30 @@ static void construir_nombre_html(const char *ruta) {
     memcpy(archivo_html, nombre, n);
     archivo_html[n] = '\0';
     strcat(archivo_html, ".html");
+    snprintf(archivo_html_temporal, sizeof(archivo_html_temporal), "%s.tmp", archivo_html);
+}
+
+static void mostrar_fecha_hora_ejecucion(void) {
+    time_t ahora = time(NULL);
+    struct tm *local = localtime(&ahora);
+    char fecha[16];
+    char hora[16];
+
+    if (!local) {
+        printf("Fecha de ejecucion: no disponible\n");
+        printf("Hora de ejecucion: no disponible\n");
+        return;
+    }
+
+    strftime(fecha, sizeof(fecha), "%d/%m/%Y", local);
+    strftime(hora, sizeof(hora), "%H:%M:%S", local);
+    printf("Fecha de ejecucion: %s\n", fecha);
+    printf("Hora de ejecucion: %s\n", hora);
+}
+
+static void mostrar_resumen_errores(void) {
+    printf("Resumen de errores: lexicos=%d, sintacticos=%d, semanticos=%d\n",
+           errores_lexicos, errores_sintacticos, errores_semanticos);
 }
 
 int main(int argc, char **argv) {
@@ -841,26 +906,41 @@ int main(int argc, char **argv) {
     }
 
     construir_nombre_html(archivo_entrada);
+    remove(archivo_html);
+    descartar_html_temporal();
 
     printf("--- Parser SMART-HOME ---\n");
+    mostrar_fecha_hora_ejecucion();
+    printf("Archivo analizado: %s\n", archivo_entrada);
+    printf("Generando HTML temporal durante el analisis...\n");
+
+    /* Se crea la estructura inicial. Luego se actualiza desde las acciones del parser. */
+    actualizar_html_durante_parseo();
     resultado = yyparse();
 
     if (yyin && yyin != stdin) fclose(yyin);
+    mostrar_resumen_errores();
 
     if (resultado == 0 && errores_lexicos == 0 && errores_sintacticos == 0) {
         printf("Analisis lexico y sintactico exitoso.\n");
+
         if (errores_semanticos > 0) {
+            descartar_html_temporal();
             printf("Analisis semantico finalizado con %d error(es).\n", errores_semanticos);
-            generar_html();
-            printf("HTML generado parcialmente: %s\n", archivo_html);
+            printf("No se genera HTML porque el archivo contiene errores semanticos.\n");
             return 2;
         }
+
         printf("Analisis semantico exitoso.\n");
-        generar_html();
-        printf("HTML generado correctamente: %s\n", archivo_html);
+        if (!confirmar_html_final()) {
+            descartar_html_temporal();
+            return 1;
+        }
+        printf("HTML generado durante el parseo y finalizado correctamente: %s\n", archivo_html);
         return 0;
     }
 
+    descartar_html_temporal();
     printf("Analisis finalizado con errores lexicos o sintacticos. No se genera HTML.\n");
     return 1;
 }
